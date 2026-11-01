@@ -1,0 +1,35 @@
+"""Write exact per-product image provenance and a local visual review/credits page."""
+import hashlib
+import html
+import json
+from pathlib import Path
+
+root = Path(__file__).resolve().parent.parent
+manifest = json.loads((root / "catalogue/ramen-images.json").read_text(encoding="utf-8"))
+products = {p["catalogue_id"]: p for p in json.loads((root / "catalogue/ramen.json").read_text())}
+verified = [p for p in manifest if p["status"] == "verified_photo"]
+placeholders = [p for p in manifest if p["status"] == "placeholder"]
+lines = ["# Ramen image audit", "", "Checked 2026-11-01. No production migration or deployment performed.", "", f"**{len(verified)} verified, locally optimized photos; {len(placeholders)} unique branded placeholders.**", "", "Every photo below was visually checked for brand, flavor, and whether it depicts a single packet/cup. Manufacturer and image search results were used for matching, not as a permission grant. Downloaded photos come from Open Food Facts under CC BY-SA 3.0 or Wikimedia Commons under the per-file licence; attribution and licence links are displayed in the storefront and the public credits page. Placeholder entries have no claim of depicting the actual packet.", "", "The storefront now reads all 50 entries directly from ramen.json. Catalogue-only IDs are namespaced strings; existing commercial rows are matched by catalogue ID, slug or normalized name to prevent duplicate cards. Existing numeric IDs and LKR prices are preserved from the checked-in snapshot or already-cached store data.", "", "## Verified photos", "", "| Product / stable ID | Flavor / retail unit | Local file | Photographer / source |", "|---|---|---|---|"]
+cards = []
+for entry in manifest:
+    product = products[entry["catalogue_id"]]
+    content = (root / ("public" + entry["image"])).read_bytes()
+    entry["sha256"] = hashlib.sha256(content).hexdigest()
+    entry["bytes"] = len(content)
+    name = entry["name"]
+    if entry["status"] == "verified_photo":
+        lines.append(f"| {name}<br>{entry['catalogue_id']} | {entry['flavor']} / {product['unit']} | {entry['image']} | {entry['author']} · [source]({entry['source_url']}) · [{entry['license']}]({entry['license_url']}) |")
+        credit = f"Photo: {html.escape(entry['author'])} / <a href='{html.escape(entry['source_url'])}'>{html.escape(entry.get('source_name', 'Open Food Facts'))}</a>. <a href='{entry['license_url']}'>{entry['license']}</a>. {html.escape(entry['changes'])} Redistributed under the same licence; no endorsement implied."
+    else:
+        credit = "Original branded placeholder. " + html.escape(entry["reason"])
+    cards.append(f"<article><img src='{entry['image']}' alt='{html.escape(entry['alt'])}' loading='lazy' width='400' height='400'><h2>{html.escape(name)}</h2><p>{html.escape(entry['catalogue_id'])}</p><p>{html.escape(entry['flavor'])} / {html.escape(product['unit'])}</p><p><strong>{entry['status']}</strong></p><p>{credit}</p></article>")
+lines.extend(["", "All JPEGs use source front crops at maximum 600px, quality 85. Most source crops are 400px. No upscaling, flavor recoloring, generated packets, or temporary Google thumbnails are used. Shin Original was rotated upright. Cream Carbonara's source database record is a 5-pack, but the selected photo visibly depicts one inner 140g packet; the price is explicitly for one packet. Koka is a 90g cup, not the rejected 4-pack photo.", "", "## Placeholders / manual review", "", "| Product / stable ID | Flavor | Local placeholder | Reason |", "|---|---|---|---|"])
+for entry in placeholders:
+    lines.append(f"| {entry['name']}<br>{entry['catalogue_id']} | {entry['flavor']} | {entry['fallback']} | {entry['reason']} |")
+lines.extend(["", "## Rejected candidates", "", "- Nissin Raoh candidate 0070662500033 showed Tonkotsu, not Miso.", "- Samyang candidate 8801073114333 showed Corn, not Cream Carbonara.", "- Acecook Pho Bo candidate 8934561020035 was Vifon, the wrong manufacturer.", "- Neoguri candidate 8801043157773 was Seafood & Mild, inconsistent with the selected spicy variant.", "- MyKuali White Curry candidate 9555655005203 showed a 4-pack box, not the selected single retail packet.", "- Koka candidate 8888056815227 showed 4 x 90g; the separate single-cup photo was selected instead.", "- Habanero Lime candidate 8801073143777 belonged to a 675g multi-pack record; a verified single 135g packet photo was used instead.", "", "## Research and licence references", "", "- [Open Food Facts image reuse documentation](https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/tutorials/license-be-on-the-legal-side/)", "- [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)", "- [Nissin image terms](https://www.nissin.com/en_jp/docs/terms/): manufacturer's pages do not grant general commercial republication permission.", "- Official product families checked: Samyang, Nongshim, Ottogi, Paldo, Ichiran, Nissin, Sanyo Foods, Indomie, Acecook, MyKuali and A-Sha. Exact-name image queries were run for all 50 products. Per-item image-search leads are stored in ramen-images.json; they are not download URLs or reuse licences.", "- Several Open Food Facts searches/downloads returned HTTP 503 or interrupted connections. The CC0 Chicken Ramen photo was downloaded on retry but showed a bare noodle cake, not a packet. The Sapporo Shio candidate showed only the packet back. Both were rejected. Unverified/undownloaded candidates were not published.", "", "## Local frontend mode", "", "No database connection, migration change, migration application, or deployment was performed for the local frontend task. All 50 products are rendered from JSON; no database rollout is needed to display them. Future deployment requires approval."])
+(root / "catalogue/IMAGE-AUDIT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+(root / "catalogue/ramen-images.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+page = "<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>KUMO product photo credits and review</title><style>body{margin:24px;font:15px system-ui;background:#faf7f0;color:#30362c}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}article{padding:16px;background:white;border-radius:12px;overflow-wrap:anywhere}img{width:100%;height:260px;object-fit:contain}h2{font-size:18px}a{color:#a92e29}p{line-height:1.5}</style><h1>KUMO product photo credits and review</h1>" + f"<p>{len(verified)} verified photos and {len(placeholders)} labelled placeholders. JPY estimates are separate from selling prices. This page documents photos; it does not confirm stock. <a href='/'>Return to KUMO</a></p><main>" + "".join(cards) + "</main></html>"
+(root / "public/products/ramen/credits.html").write_text(page, encoding="utf-8")
+assert len({entry["sha256"] for entry in manifest}) == 50, "Unexpected reused image"
+print(f"Wrote exact image audit: {len(verified)} verified photos, {len(placeholders)} placeholders; all 50 assets have different hashes.")

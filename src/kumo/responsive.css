@@ -1,0 +1,32 @@
+body:has(.market-header) { width: 100%; max-width: none; font-size: 16px; }
+.market-top, .market-top p, .market-contact button, .market-cart-label, .market-nav button { font-size: 13px; }
+.market-search input, .market-search select, .market-category-trigger { font-size: 14px; }
+.market-search, .market-category-trigger { height: 48px; }
+.market-main { gap: 24px; }
+.market-nav { gap: 20px; }
+.market-logo small, .nav-badge { font-size: 9px; }
+main .eyebrow, .collection small, .find-promo small { font-size: 12px; }
+.trust-strip, .collection p, .collection-heading > p:last-child, .collection-tabs button, .collection-tools button, .collection-tools label, .find-card > small, .find-add span, .collection-footer, .find-sale > p:not(.eyebrow), .steps p, .story p:not(.eyebrow), .story a, .last-banner p, .last-banner button, .footer-main p, .footer-main > div > a:not(.logo), .footer-main > div > button { font-size: 14px; }
+.find-name, .find-price, .steps h3 { font-size: 16px; }
+.find-price del, .find-badge, .find-sale > small, .footer-main strong, .footer-message small, .footer-bottom { font-size: 12px; }
+.find-sale .eyebrow, .sale-note, .last-banner span { font-size: 11px; }
+.find-sale > button { font-size: 14px; min-height: 44px; }
+.collection-tabs button, .collection-tools button { min-height: 44px; }
+@media (max-width: 1200px) {
+  .market-main { flex-wrap: wrap; padding: 20px 0; }
+  .market-logo { margin-right: auto; }
+  .market-main .market-nav { order: 3; flex-basis: 100%; flex-wrap: wrap; justify-content: flex-start; height: auto; }
+}
+@media (max-width: 700px) {
+  .market-top p, .market-top > div, .market-language, .market-cart-label { font-size: 11px; }
+  .market-search input, .market-search select, .market-category-trigger, .market-nav button { font-size: 12px; }
+  .market-cart-label b { font-size: 12px; }
+  .market-bottom { gap: 12px 8px; }
+  .market-categories { width: auto; flex: 1; min-width: 0; }
+  .market-shopping { gap: 10px; }
+  .market-category-trigger { padding: 0 10px; gap: 6px; }
+  .trust-strip, main .eyebrow, .collection small, .find-card > small, .find-badge, .collection-footer { font-size: 12px; }
+  .collection-tools > div { flex-wrap: wrap; gap: 12px; }
+  .find-name, .find-price { font-size: 14px; }
+  .footer-bottom { line-height: 1.6; }
+}

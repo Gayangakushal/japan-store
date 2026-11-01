@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793471209795,
+      "tag": "0000_kumo_shared_store",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793491200000,
+      "tag": "0001_ramen_catalogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793491300000,
+      "tag": "0002_ramen_catalogue_media_repair",
+      "breakpoints": true
+    }
+  ]
+}

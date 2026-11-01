@@ -1,0 +1,96 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Ichiran Tonkotsu Ramen",
+      "category": "Ramen",
+      "subtitle": "Rich broth. A little Tokyo comfort.",
+      "price": 1850,
+      "old": 2200,
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=700&q=85",
+      "tag": "BESTSELLER",
+      "size": "1 serving \u00b7 125g"
+    },
+    {
+      "id": 2,
+      "name": "Meiji Milk Chocolate",
+      "category": "Chocolate",
+      "subtitle": "The classic, beautifully smooth.",
+      "price": 890,
+      "old": null,
+      "image": "/products/chocolate.jpg",
+      "tag": "JAPAN FAVOURITE",
+      "size": "50g bar"
+    },
+    {
+      "id": 3,
+      "name": "Hada Labo Hydrating Lotion",
+      "category": "Beauty",
+      "subtitle": "A daily dose of dewy hydration.",
+      "price": 4650,
+      "old": 5100,
+      "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=700&q=85",
+      "tag": "BACK IN STOCK",
+      "size": "170ml"
+    },
+    {
+      "id": 4,
+      "name": "Nissin Spicy Miso Ramen",
+      "category": "Ramen",
+      "subtitle": "Big flavour. Just enough heat.",
+      "price": 1250,
+      "old": null,
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=700&q=85",
+      "tag": "NEW",
+      "size": "1 cup \u00b7 87g"
+    },
+    {
+      "id": 5,
+      "name": "Matcha Chocolate Bites",
+      "category": "Chocolate",
+      "subtitle": "Earthy matcha meets creamy chocolate.",
+      "price": 1650,
+      "old": null,
+      "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=700&q=85",
+      "tag": "NEW",
+      "size": "12 pieces"
+    },
+    {
+      "id": 6,
+      "name": "Botanical Facial Oil",
+      "category": "Beauty",
+      "subtitle": "A softer start to your everyday.",
+      "price": 3950,
+      "old": null,
+      "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=700&q=85",
+      "tag": "EDITOR\u2019S PICK",
+      "size": "30ml"
+    },
+    {
+      "id": 7,
+      "name": "Dark Chocolate Selection",
+      "category": "Chocolate",
+      "subtitle": "For the very serious chocolate lover.",
+      "price": 2400,
+      "old": null,
+      "image": "/products/chocolate.jpg",
+      "tag": "LIMITED",
+      "size": "150g gift box"
+    },
+    {
+      "id": 8,
+      "name": "Tokyo Shoyu Ramen",
+      "category": "Ramen",
+      "subtitle": "Slow Sunday comfort, in minutes.",
+      "price": 1450,
+      "old": null,
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=700&q=85",
+      "tag": "PANTRY ESSENTIAL",
+      "size": "2 servings"
+    }
+  ],
+  "settings": {
+    "name": "KUMO",
+    "phone": ""
+  }
+}
