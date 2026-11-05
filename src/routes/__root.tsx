@@ -124,17 +124,23 @@ function RootComponent() {
   useEffect(() => {
     // The offline design preview never needs a backend auth session.
     if (pathname === "/admin-preview") return;
-    const { data } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        sessionStorage.setItem("kumo-recovery", "true");
-        void router.navigate({ to: "/reset-password" });
-        return;
-      }
-      if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"].includes(event)) return;
-      void router.invalidate();
-      if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
-    });
-    return () => data.subscription.unsubscribe();
+    try {
+      const { data } = supabase.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY") {
+          sessionStorage.setItem("kumo-recovery", "true");
+          void router.navigate({ to: "/reset-password" });
+          return;
+        }
+        if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED"].includes(event)) return;
+        void router.invalidate();
+        if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+      });
+      return () => data.subscription.unsubscribe();
+    } catch (error) {
+      // Store queries can show a recoverable connection error; an optional auth
+      // listener must not replace the entire storefront with the root error page.
+      console.error('Unable to initialise the account session:', error);
+    }
   }, [queryClient, router, pathname]);
 
   return (

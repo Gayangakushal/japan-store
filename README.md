@@ -33,7 +33,7 @@ Public store data refreshes on focus and every 30 seconds in active tabs. Databa
 
 ## Deploying
 
-Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` and `VITE_SUPABASE_PROJECT_ID` in your hosting environment before building. Local `.env` files are excluded from Git and are not automatically uploaded. Replace any inherited settings for the old Lovable backend. If server-side `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` variables are present, they must target the same project.
+The selected KUMO project has public connection defaults in `src/integrations/supabase/public-config.ts`, so deployments work without hosting environment variables. To use another backend, set both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` (and its `VITE_SUPABASE_PROJECT_ID`) before building. Do not configure only one value. Local `.env` files are excluded from Git and are not automatically uploaded. Replace any inherited settings for the old Lovable backend. If server-side `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` variables are present, they must target the same project.
 
 Configure your deployed site and password-reset redirect URLs in Supabase Authentication. See [setup instructions](supabase/SETUP.md).
 
