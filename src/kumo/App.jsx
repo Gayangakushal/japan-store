@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { buildLocalCatalogue, localStoreSnapshot, canAddToBag } from "@/lib/local-catalogue";
 import { signOut } from "@/lib/sign-out";
 import PaymentMarks from "./PaymentMarks";
+import { defaultCategoryStatus } from "@/lib/storefront-config";
 import ProductShowcase from "./ProductShowcase";
 import ProductImage from "./ProductImage";
 import ProductDetails from "./ProductDetails";
@@ -48,13 +49,13 @@ function persisted(k, def) {
   }
 }
 const money = (n) => "Rs. " + Number(n).toLocaleString("en-LK");
-export default function App() {
+export default function App({ previewStore = null, categoryStatus = defaultCategoryStatus }) {
   const queryClient = useQueryClient(),
     navigate = useNavigate();
   // Reuse data already in memory when returning from another route; never fetch it here.
-  const store = queryClient.getQueryData(["store"]) || localStoreSnapshot;
+  const store = previewStore || queryClient.getQueryData(["store"]) || localStoreSnapshot;
   const account = queryClient.getQueryData(["account"]) || null;
-  const products = React.useMemo(() => buildLocalCatalogue(store.products), [store.products]);
+  const products = React.useMemo(() => previewStore ? store.products : buildLocalCatalogue(store.products), [store.products, previewStore]);
   const [unused, setProducts] = S([]),
     [cart, setCart] = S(() => persisted("kumo-cart", [])),
     [category, setCategory] = S("All finds"),
@@ -141,6 +142,7 @@ export default function App() {
   return (
     <>
       <StoreHeader
+        categoryStatus={categoryStatus}
         account={account}
         onSignOut={async () => {
           await signOut(queryClient);
@@ -251,7 +253,7 @@ export default function App() {
                   <div>
                     <small>{c.label}</small>
                     <h3>{c.title}</h3>
-                    <p>{c.text}</p>
+                    <p>{categoryStatus[c.cat] === "coming_soon" ? "Coming soon" : c.text}</p>
                   </div>
                   <span className="circle-arrow">
                     <ArrowUpRight size={21} />
@@ -261,6 +263,7 @@ export default function App() {
             </div>
           </section>
           <ProductShowcase
+            categoryStatus={categoryStatus}
             products={products}
             filtered={filtered}
             category={category}
@@ -512,6 +515,8 @@ export default function App() {
       {detail && (
         <ProductDetails
           product={detail}
+          products={products.filter((p) => categoryStatus[p.category] !== "coming_soon")}
+          onSelect={setDetail}
           money={money}
           onClose={() => setDetail(null)}
           onAdd={add}

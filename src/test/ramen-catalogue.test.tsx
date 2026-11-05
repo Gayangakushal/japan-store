@@ -163,8 +163,8 @@ describe("Ramen catalogue", () => {
     );
     const card = host.querySelector("article")!;
     expect(card).toHaveTextContent("Ichiran Tonkotsu Ramen");
-    expect(card).toHaveTextContent("Estimated Japan retail price");
-    expect(card).toHaveTextContent("\u00a5650");
+    expect(card).not.toHaveTextContent("Estimated Japan retail price");
+    expect(card).toHaveTextContent("Price pending");
     expect(card.querySelector(".find-add")).toBeDisabled();
     act(() => (card.querySelector(".find-open") as HTMLButtonElement).click());
     expect(detail).toHaveBeenCalled();
@@ -181,12 +181,13 @@ describe("Ramen catalogue", () => {
       host.querySelector('[aria-label="Sort products"]') as HTMLSelectElement,
       "Japan price: low to high",
     );
-    expect(host.querySelector(".ramen-meta")).toHaveTextContent(
-      "\u00a5" + Math.min(...entries.map((p: { price_jpy: number }) => p.price_jpy)),
-    );
+    const cheapest = Math.min(...entries.map((p: { price_jpy: number }) => p.price_jpy));
+    const firstCardName = host.querySelector(".find-name")?.textContent;
+    expect(entries.find((p: { name: string }) => p.name === firstCardName).price_jpy).toBe(cheapest);
+    expect(host.querySelector(".ramen-meta")).toBeNull();
     change(control("Country"), "Indonesia");
     expect(host.querySelectorAll("article")).toHaveLength(4);
-    host.querySelectorAll("article").forEach((el) => expect(el).toHaveTextContent("Indonesia"));
+    host.querySelectorAll(".find-name").forEach((el) => expect(entries.find((p: { name: string }) => p.name === el.textContent).country).toBe("Indonesia"));
   });
   it("uses the exact mapped image even before legacy records receive ramen metadata", () => {
     render(
@@ -229,9 +230,32 @@ describe("Ramen catalogue", () => {
       "src",
       "/products/ramen/samyang-buldak-carbonara.jpg",
     );
-    act(() => (dialog.querySelector(".primary") as HTMLButtonElement).click());
+    act(() => (dialog.querySelector(".detail-add") as HTMLButtonElement).click());
     expect(onAdd).toHaveBeenCalled();
     act(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" })));
     expect(onClose).toHaveBeenCalled();
   });
+  it("keeps upcoming collections empty and offers a return to ramen", () => {
+    render(<Harness />);
+    const category = [...host.querySelectorAll('[aria-label="Product categories"] button')].find((button) => button.textContent === "Beauty") as HTMLButtonElement;
+    act(() => category.click());
+    expect(host).toHaveTextContent("Coming soon");
+    expect(host.querySelectorAll(".find-card")).toHaveLength(0);
+    expect(host.querySelector(".ramen-filters")).toBeNull();
+    const explore = [...host.querySelectorAll("button")].find((button) => button.textContent?.includes("Explore ramen instead"))!;
+    act(() => explore.click());
+    expect(host.querySelectorAll(".find-card")).toHaveLength(50);
+  });
+  it("shows only matching related finds and opens the selected recommendation", () => {
+    const first = entries[0], next = entries[1];
+    const product = { id: 1, name: first.name, category: "Ramen", price: 1000, ramen: first };
+    const recommended = { id: 2, name: next.name, category: "Ramen", price: 1200, ramen: next };
+    const onSelect = vi.fn();
+    render(<ProductDetails product={product} products={[product, recommended, { id: 3, name: "Beauty item", category: "Beauty", price: 300 }]} money={(n: number) => `Rs. ${n}`} onClose={vi.fn()} onAdd={vi.fn()} onSelect={onSelect} />);
+    expect(host.querySelectorAll(".detail-related-card")).toHaveLength(1);
+    expect(host.querySelector(".detail-related")).not.toHaveTextContent("Beauty item");
+    act(() => (host.querySelector(".detail-related-card") as HTMLButtonElement).click());
+    expect(onSelect).toHaveBeenCalledWith(recommended);
+  });
+
 });

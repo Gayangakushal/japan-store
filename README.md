@@ -1,40 +1,60 @@
 # KUMO Japan Store
 
-The existing KUMO storefront, built with React, TanStack Start, Vite and TypeScript. The ramen catalogue runs from local frontend JSON without a production database connection.
+Japanese ramen, chocolate and beauty storefront built with React, TanStack Start, Vite and TypeScript. Products, category statuses and store settings are shared through Supabase. Customer shopping bags stay local to each browser.
 
 ## Run locally
 
-Use Node.js 22 or newer and npm.
+Use Node.js 22 or newer.
 
 ```sh
 npm ci
+```
+
+Copy `.env.example` to `.env`, then set your Supabase project URL, public publishable key and project ID. Never put a secret or service-role key in a frontend variable.
+
+Follow [Supabase setup](supabase/SETUP.md) to create the database, image storage and the first authorised admin account. Existing configured projects do not need to be reseeded.
+
+```sh
 npm run dev
 ```
 
-Open the Local URL printed by Vite. The public catalogue does not require a `.env` file. Existing admin/auth features are optional and require your own configured backend; see `.env.example`. Never commit credentials.
+Open the Local URL printed by Vite.
 
-## Catalogue
+## Store and administration
 
-- All 50 requested ramen products display by default in the existing responsive grid.
-- 27 verified local packet/cup photos and 23 unique branded placeholders.
-- Name/brand search, country/brand/heat filters, sorting and product details.
-- Estimated Japanese retail prices are shown separately in JPY with pack units.
-- Existing checked-in LKR prices and cart/WhatsApp checkout logic are preserved.
-- JSON-only catalogue items cannot be added to the bag.
-- Existing products are matched by stable catalogue ID, slug or normalized name to prevent duplicate cards.
+- Public storefront: `/`, including product details and related recommendations.
+- Secure email/password sign-in: `/auth`.
+- Role-protected live dashboard: `/admin`, with product editing, image uploads, stock/price filters, category launch controls and store settings.
+- Offline design preview: `/admin-preview`. Its session-only drafts never update the live store.
+- Beauty and Chocolate start as Coming soon; admins control their launch status.
+- Japanese retail references are separate from LKR selling prices. Pending prices and out-of-stock products cannot be ordered.
 
-Data: `catalogue/ramen.json`. Existing commercial snapshot: `catalogue/storefront-snapshot.json`.
+Public store data refreshes on focus and every 30 seconds in active tabs. Database Row Level Security enforces admin-only writes. Admin roles are assigned through trusted management, never through public signup or browser metadata.
 
-Read the [catalogue guide](catalogue/README.md) and the [exact image audit](catalogue/IMAGE-AUDIT.md). Individual photos retain their documented CC licences and attribution; those licences do not imply a licence for all project code.
+## Deploying
+
+Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` and `VITE_SUPABASE_PROJECT_ID` in your hosting environment before building. Local `.env` files are excluded from Git and are not automatically uploaded. Replace any inherited settings for the old Lovable backend. If server-side `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` variables are present, they must target the same project.
+
+Configure your deployed site and password-reset redirect URLs in Supabase Authentication. See [setup instructions](supabase/SETUP.md).
+
+```sh
+npm run build
+```
 
 ## Verification
 
 ```sh
-node scripts/check-local-catalogue.mjs
+npm test -- --maxWorkers=1 --no-file-parallelism
+npx tsc --noEmit
+npm run build
+node --env-file=.env scripts/check-supabase.mjs
+node --env-file=.env scripts/verify-supabase-security.mjs
 ```
 
-This runs the scoped local tests, TypeScript, changed-file lint, production build and an installed-Chrome browser check. The Chrome step currently expects Windows Google Chrome in its standard installation path. It blocks non-local requests, verifies 50 unique decodable assets, and checks desktop/mobile layouts. It does not run migration or live database tests.
+The last two commands require your configured Supabase project. Live admin sign-in and uploads must also be checked with an authorised account. `scripts/preview-kumo-ui.mjs` checks desktop/mobile layouts against a running `localhost:8080` using an isolated installed Windows Chrome profile and blocks remote writes.
 
-The latest local verification passed 12 tests, type checking, changed-file lint and production build. Browser checks confirmed 50 catalogue cards, four desktop columns, two mobile columns, no horizontal overflow and zero database requests.
+## Product media
 
-Existing migration files are retained for separately reviewed future backend work. Do not run migration preparation or apply migrations as part of local catalogue setup. Publishing/deployment and database rollout require separate approval. No GitHub deployment workflow is included.
+The catalogue retains verified local product photos and branded placeholders where a photo is unavailable. Admins can upload their own product images. Preserve documented photo licences and attribution: [catalogue guide](catalogue/README.md), [image audit](catalogue/IMAGE-AUDIT.md).
+
+This project is connected to Lovable. Preserve published Git history when syncing changes.

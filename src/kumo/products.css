@@ -524,3 +524,406 @@
   font-weight: 400;
   color: #746e63;
 }
+
+/* KUMO collection cards: warm paper, ink typography and a restrained red accent. */
+.find-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #e7e4dd;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px #28302a03;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    border-color 0.25s;
+}
+.find-card:hover,
+.find-card:focus-within {
+  transform: translateY(-4px);
+  border-color: #d5c6b7;
+  box-shadow: 0 15px 32px #242b3210;
+}
+.find-card .find-image {
+  height: auto;
+  aspect-ratio: 1.06;
+  margin: 8px 8px 0;
+  border: 0;
+  border-radius: 11px;
+  background: #f3f0e9;
+  flex-shrink: 0;
+  isolation: isolate;
+}
+.find-card .find-open {
+  display: block;
+  background: #f3f0e9;
+}
+.find-card .find-open img {
+  object-fit: contain;
+  padding: 24px;
+  mix-blend-mode: multiply;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.find-card .find-open:hover img {
+  transform: scale(1.06);
+}
+.find-card .find-badge {
+  top: 12px;
+  left: 12px;
+  max-width: calc(100% - 62px);
+  background: #fffaf4ed;
+  color: #6b655c;
+  border: 1px solid #e2dacf;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 7px 9px;
+  line-height: 1.2;
+}
+.find-card .find-badge.is-offer {
+  background: #b9332e;
+  color: white;
+  border-color: #b9332e;
+}
+.find-card .find-save {
+  top: 10px;
+  right: 10px;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #e7dfd3;
+  background: #fffaf4e8;
+  color: #77766e;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.find-card .find-save:hover,
+.find-card .find-save.saved {
+  color: #b9332e;
+  background: #fff;
+}
+.find-image-hint {
+  position: absolute;
+  bottom: 11px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fffaf4ed;
+  border: 1px solid #e8e0d5;
+  padding: 9px 12px;
+  border-radius: 5px;
+  font-size: 10px;
+  color: #5e6056;
+  opacity: 0;
+  transform: translateY(5px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+.find-card:hover .find-image-hint,
+.find-card:focus-within .find-image-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+.find-card-copy {
+  padding: 19px 18px 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.find-card .find-category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 9px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #a16c4d;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.find-category > span {
+  color: #a4a49a;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+.find-card .find-name {
+  font-family: Manrope, "DM Sans", sans-serif;
+  color: #25313c;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  min-height: 45px;
+  margin: 0 0 19px;
+  padding: 0;
+  text-align: left;
+}
+.find-card .find-name:hover {
+  color: #b9332e;
+  opacity: 1;
+}
+.find-purchase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding: 0 0 17px;
+}
+.find-purchase-info {
+  min-width: 0;
+}
+.find-stock {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #69816a;
+  font-size: 9px;
+  line-height: 1.5;
+  margin: 0 0 6px;
+  text-transform: capitalize;
+}
+.find-stock:before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.find-stock.pending {
+  color: #9b9486;
+}
+.find-card .find-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  color: #263343;
+  font-family: Manrope, "DM Sans", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.35;
+  margin: 0;
+}
+.find-card .find-price del {
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #a6a59b;
+  margin: 0;
+}
+.find-card .find-add {
+  position: static;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 39px;
+  height: 39px;
+  padding: 0;
+  border-radius: 9px;
+  background: #b9332e;
+  color: #fff;
+  box-shadow: none;
+}
+.find-card .find-add:hover {
+  background: #932723;
+  opacity: 1;
+}
+.find-card .find-add:disabled {
+  display: none;
+}
+.find-card .find-add .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.find-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 0;
+  border-top: 1px solid #eeece5;
+  color: #6c726c;
+  font-size: 10px;
+  font-weight: 500;
+  text-align: left;
+  transition: color 0.2s;
+}
+.find-details svg {
+  color: #b9332e;
+  transition: transform 0.2s;
+}
+.find-details:hover {
+  opacity: 1;
+  color: #b9332e;
+}
+.find-details:hover svg {
+  transform: translate(2px, -2px);
+}
+.collection-products {
+  gap: 24px;
+}
+.collection-heading .eyebrow {
+  letter-spacing: 2.4px;
+  font-size: 9px;
+}
+.collection-heading h2 {
+  font-weight: 600;
+  letter-spacing: -1.5px;
+}
+.collection-tabs button {
+  border-radius: 6px;
+  background: transparent;
+  border-color: #e4ded2;
+  color: #7b7d71;
+  font-weight: 500;
+}
+.collection-tabs button.active {
+  background: #263343;
+  border-color: #263343;
+  color: #fff;
+}
+@media (min-width: 1400px) {
+  .find-card .find-image {
+    aspect-ratio: 1.12;
+  }
+  .find-card-copy {
+    padding: 22px 21px 0;
+  }
+  .find-card .find-name {
+    font-size: 16px;
+  }
+}
+@media (max-width: 1000px) {
+  .collection-products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .find-card-copy {
+    padding: 16px 14px 0;
+  }
+  .find-card .find-name {
+    font-size: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .collection-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 11px;
+  }
+  .find-card {
+    border-radius: 12px;
+  }
+  .find-card .find-image {
+    margin: 5px 5px 0;
+    border-radius: 8px;
+    aspect-ratio: 0.96;
+  }
+  .find-card .find-open img {
+    padding: 16px 10px;
+  }
+  .find-card .find-badge {
+    left: 7px;
+    top: 8px;
+    padding: 5px 6px;
+    font-size: 6px;
+    letter-spacing: 0.6px;
+    max-width: calc(100% - 42px);
+  }
+  .find-card .find-save {
+    width: 26px;
+    height: 26px;
+    top: 7px;
+    right: 6px;
+  }
+  .find-card .find-save svg {
+    width: 13px;
+  }
+  .find-card-copy {
+    padding: 13px 11px 0;
+  }
+  .find-card .find-category {
+    font-size: 8px;
+    letter-spacing: 0;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .find-category > span {
+    font-size: 6px;
+    letter-spacing: 0.3px;
+  }
+  .find-card .find-name {
+    font-size: 12px;
+    line-height: 1.55;
+    min-height: 39px;
+    margin-bottom: 13px;
+    letter-spacing: -0.2px;
+  }
+  .find-card .find-price {
+    font-size: 15px;
+    letter-spacing: -0.4px;
+  }
+  .find-card .find-price del {
+    font-size: 9px;
+  }
+  .find-stock {
+    font-size: 8px;
+    gap: 4px;
+  }
+  .find-card .find-add {
+    height: 32px;
+    width: 32px;
+    border-radius: 7px;
+  }
+  .find-card .find-add svg {
+    width: 17px;
+  }
+  .find-purchase {
+    padding-bottom: 13px;
+    gap: 4px;
+  }
+  .find-details {
+    font-size: 9px;
+    padding: 11px 0;
+  }
+  .find-details svg {
+    width: 14px;
+  }
+  .find-image-hint {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .find-card,
+  .find-card .find-open img,
+  .find-image-hint,
+  .find-details svg {
+    transition: none;
+  }
+  .find-card:hover,
+  .find-card:focus-within {
+    transform: none;
+  }
+}

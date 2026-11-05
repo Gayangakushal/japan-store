@@ -46,3 +46,6 @@ catalogue/research/
 .qodo/
 .codex/
 .agents/
+
+# Isolated checkout used to publish project updates
+.publish-japan-store/

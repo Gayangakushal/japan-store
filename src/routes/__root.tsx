@@ -122,9 +122,8 @@ function RootComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const router = useRouter();
   useEffect(() => {
-    // The public storefront is local-only; do not initialize/refresh a cloud auth session here.
-    // Authentication behaviour stays available on the existing account/admin routes.
-    if (pathname === "/") return;
+    // The offline design preview never needs a backend auth session.
+    if (pathname === "/admin-preview") return;
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         sessionStorage.setItem("kumo-recovery", "true");

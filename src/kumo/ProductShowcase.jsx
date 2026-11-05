@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Heart, Plus, Search } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Heart, ShoppingCart, Search } from "lucide-react";
 import "./products.css";
-import ProductImage, { ImageCredit } from "./ProductImage";
+import ProductImage from "./ProductImage";
 import { canAddToBag } from "@/lib/local-catalogue";
+import { defaultCategoryStatus } from "@/lib/storefront-config";
 
 export default function ProductShowcase({
   products,
@@ -20,11 +21,12 @@ export default function ProductShowcase({
   onAdd,
   money,
   onReset,
+  categoryStatus = defaultCategoryStatus,
 }) {
   const [country, setCountry] = useState("");
   const [brand, setBrand] = useState("");
   const [heat, setHeat] = useState("");
-  const jpy = (n) => "\u00a5" + Number(n).toLocaleString("ja-JP");
+
   const [collection, setCollection] = useState("All Products");
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState("All");
@@ -42,17 +44,21 @@ export default function ProductShowcase({
     setBrand("");
     setHeat("");
   }, [category, view]);
-  let selection = filtered.filter(
-    (p) =>
-      collection === "All Products" ||
-      (collection === "Latest Products"
-        ? p.tag === "NEW"
-        : collection === "Best Sellers"
-          ? p.tag === "BESTSELLER"
-          : Boolean(p.old > p.price)),
-  );
+  const comingSoon = categoryStatus[category] === "coming_soon";
+  let selection = filtered
+    .filter((p) => categoryStatus[p.category] !== "coming_soon")
+    .filter(
+      (p) =>
+        collection === "All Products" ||
+        (collection === "Latest Products"
+          ? p.tag === "NEW"
+          : collection === "Best Sellers"
+            ? p.tag === "BESTSELLER"
+            : Boolean(p.old > p.price)),
+    );
   selection = selection.filter(
     (p) =>
+      !comingSoon &&
       (!country || p.ramen?.country === country) &&
       (!brand || p.ramen?.brand === brand) &&
       (heat === "" || p.ramen?.spicy_level === Number(heat)),
@@ -74,7 +80,9 @@ export default function ProductShowcase({
   const pageSize = perPage === "All" ? Math.max(1, selection.length) : Number(perPage);
   const pages = Math.ceil(selection.length / pageSize);
   const current = Math.min(page, Math.max(0, pages - 1));
-  const deals = products.filter((p) => p.old > p.price);
+  const deals = products.filter(
+    (p) => categoryStatus[p.category] !== "coming_soon" && p.price > 0 && p.old > p.price,
+  );
   const openDeals = () => {
     setCountry("");
     setBrand("");
@@ -155,55 +163,57 @@ export default function ProductShowcase({
           </select>
         </label>
       </div>
-      <div className="ramen-filters">
-        <label>
-          Search name or brand
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(0);
-            }}
-            placeholder="Find your noodles"
-          />
-        </label>
-        {[
-          [
-            "Country",
-            country,
-            setCountry,
-            [...new Set(products.map((p) => p.ramen?.country).filter(Boolean))].sort(),
-          ],
-          [
-            "Brand",
-            brand,
-            setBrand,
-            [...new Set(products.map((p) => p.ramen?.brand).filter(Boolean))].sort(),
-          ],
-          ["Heat (0-5)", heat, setHeat, [0, 1, 2, 3, 4, 5]],
-        ].map(([label, value, setValue, options]) => (
-          <label key={label}>
-            {label}
-            <select
-              value={value}
+      {!comingSoon && (
+        <div className="ramen-filters">
+          <label>
+            Search name or brand
+            <input
+              type="search"
+              value={search}
               onChange={(e) => {
-                setValue(e.target.value);
+                setSearch(e.target.value);
                 setPage(0);
               }}
-            >
-              <option value="">All</option>
-              {options.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
-            </select>
+              placeholder="Find your noodles"
+            />
           </label>
-        ))}
-        <button onClick={reset}>Reset filters</button>
-      </div>
-      {search && (
+          {[
+            [
+              "Country",
+              country,
+              setCountry,
+              [...new Set(products.map((p) => p.ramen?.country).filter(Boolean))].sort(),
+            ],
+            [
+              "Brand",
+              brand,
+              setBrand,
+              [...new Set(products.map((p) => p.ramen?.brand).filter(Boolean))].sort(),
+            ],
+            ["Heat (0-5)", heat, setHeat, [0, 1, 2, 3, 4, 5]],
+          ].map(([label, value, setValue, options]) => (
+            <label key={label}>
+              {label}
+              <select
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setPage(0);
+                }}
+              >
+                <option value="">All</option>
+                {options.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ))}
+          <button onClick={reset}>Reset filters</button>
+        </div>
+      )}
+      {search && !comingSoon && (
         <div className="collection-search">
           Results for “{search}”{" "}
           <button
@@ -227,14 +237,22 @@ export default function ProductShowcase({
               >
                 <ProductImage product={product} loading="lazy" />
               </button>
-              <span className="find-badge">
-                {product.ramen
-                  ? "Noodle catalogue"
-                  : product.old > product.price
-                    ? `${Math.round((1 - product.price / product.old) * 100)}% off`
-                    : product.tag === "NEW"
-                      ? "New find"
-                      : "Japan favourite"}
+              <span
+                className={
+                  "find-badge" +
+                  (product.old > product.price && product.price > 0 ? " is-offer" : "")
+                }
+              >
+                {product.old > product.price && product.price > 0
+                  ? `${Math.round((1 - product.price / product.old) * 100)}% OFF`
+                  : product.tag === "NEW"
+                    ? "NEW ARRIVAL"
+                    : product.tag === "BESTSELLER"
+                      ? "BESTSELLER"
+                      : "KUMO SELECT"}
+              </span>
+              <span className="find-image-hint" aria-hidden="true">
+                Take a closer look <ArrowUpRight size={15} />
               </span>
               <button
                 className={"find-save" + (liked.includes(product.id) ? " saved" : "")}
@@ -250,91 +268,131 @@ export default function ProductShowcase({
               >
                 <Heart size={16} fill={liked.includes(product.id) ? "currentColor" : "none"} />
               </button>
-              <button
-                disabled={!canAddToBag(product)}
-                className="find-add"
-                aria-label={`Add ${product.name} to bag`}
-                onClick={() => onAdd(product)}
-              >
-                <Plus size={18} />
-                <span>{!canAddToBag(product) ? "Selling price pending" : "Add to bag"}</span>
+            </div>
+            <div className="find-card-copy">
+              <small className="find-category">
+                {product.ramen?.brand || "KUMO SELECT"}
+                <span>{product.category}</span>
+              </small>
+              <button className="find-name" onClick={() => onDetail(product)}>
+                {product.name}
+              </button>
+              <div className="find-purchase">
+                <div className="find-purchase-info">
+                  <p className={"find-stock" + (!canAddToBag(product) ? " pending" : "")}>
+                    {product.ramen?.availability === "in_stock"
+                      ? "In stock"
+                      : product.ramen?.availability === "out_of_stock"
+                        ? "Out of stock"
+                        : "Stock to confirm"}
+                  </p>
+                  <div className="find-price">
+                    {product.price > 0 ? money(product.price) : "Price pending"}
+                    {product.price > 0 && product.old > product.price && (
+                      <del>{money(product.old)}</del>
+                    )}
+                  </div>
+                </div>
+                <button
+                  disabled={!canAddToBag(product)}
+                  className="find-add"
+                  aria-label={
+                    canAddToBag(product)
+                      ? `Add ${product.name} to bag`
+                      : `${product.name}: ${product.ramen?.availability === "out_of_stock" ? "out of stock" : "selling price pending"}`
+                  }
+                  title={
+                    canAddToBag(product)
+                      ? "Add to bag"
+                      : product.ramen?.availability === "out_of_stock"
+                        ? "Out of stock"
+                        : "Selling price pending"
+                  }
+                  onClick={() => onAdd(product)}
+                >
+                  <ShoppingCart size={21} />
+                  <span className="sr-only">
+                    {!canAddToBag(product) ? "Selling price pending" : "Add to bag"}
+                  </span>
+                </button>
+              </div>
+              <button className="find-details" onClick={() => onDetail(product)}>
+                View product <ArrowUpRight size={16} />
               </button>
             </div>
-            <small>
-              {product.category}
-              {product.ramen && ` / ${product.ramen.country} / ${product.ramen.brand}`}
-            </small>
-            <button className="find-name" onClick={() => onDetail(product)}>
-              {product.name}
-            </button>
-            <div className="find-price">
-              {product.price > 0 ? money(product.price) : "LKR selling price pending"}{" "}
-              {!product.ramen && product.old > product.price && <del>{money(product.old)}</del>}
-            </div>
-            {product.ramen && (
-              <div className="ramen-meta">
-                <p>
-                  {product.ramen.flavor} / Heat {product.ramen.spicy_level}/5
-                </p>
-                <p>{product.ramen.unit}</p>
-                <p className="jpy-reference">
-                  {jpy(product.ramen.price_jpy)} / Estimated Japan retail price
-                </p>
-                <p>Availability: {product.ramen.availability.replaceAll("_", " ")}</p>
-                <ImageCredit product={product} />
-              </div>
-            )}
           </article>
         ))}
       </div>
-      {!selection.length && (
-        <div className="empty">
-          <Search size={28} />
-          <h3>No products in this collection.</h3>
-          <p>Explore another collection to find your favourite.</p>
-          <button className="primary" onClick={reset}>
-            Show all products
+      {comingSoon ? (
+        <div className="category-coming-soon">
+          <span className="coming-soon-symbol" aria-hidden="true">
+            {category === "Beauty" ? "\u2727" : "\u2661"}
+          </span>
+          <span className="coming-soon-label">SOMETHING LOVELY IS ON ITS WAY</span>
+          <h2>
+            {category === "Beauty" ? "A little everyday glow." : "Sweet things take a little time."}
+          </h2>
+          <p>
+            Our {category === "Beauty" ? "Japanese beauty & care" : "chocolate & treats"} collection
+            is coming soon. We are carefully choosing your next favourites.
+          </p>
+          <span className="coming-soon-pill">Coming soon</span>
+          <button onClick={() => setCategory("Ramen")}>
+            Explore ramen instead <ArrowUpRight size={16} />
           </button>
+        </div>
+      ) : (
+        !selection.length && (
+          <div className="empty">
+            <Search size={28} />
+            <h3>No products in this collection.</h3>
+            <p>Explore another collection to find your favourite.</p>
+            <button className="primary" onClick={reset}>
+              Show all products
+            </button>
+          </div>
+        )
+      )}
+      {!comingSoon && (
+        <div className="collection-footer">
+          <label>
+            Products per page{" "}
+            <select
+              aria-label="Products per page"
+              value={perPage}
+              onChange={(e) => {
+                setPerPage(e.target.value);
+                setPage(0);
+              }}
+            >
+              {["All", "12", "24"].map((value) => (
+                <option key={value}>{value}</option>
+              ))}
+            </select>
+          </label>
+          <span>
+            {selection.length
+              ? `${current * pageSize + 1}–${Math.min((current + 1) * pageSize, selection.length)} of ${selection.length} finds`
+              : "0 finds"}
+          </span>
+          <div>
+            <button
+              disabled={pages < 2}
+              aria-label="Previous products"
+              onClick={() => setPage((current - 1 + pages) % pages)}
+            >
+              <ChevronLeft size={17} />
+            </button>
+            <button
+              disabled={pages < 2}
+              aria-label="Next products"
+              onClick={() => setPage((current + 1) % pages)}
+            >
+              <ChevronRight size={17} />
+            </button>
+          </div>
         </div>
       )}
-      <div className="collection-footer">
-        <label>
-          Products per page{" "}
-          <select
-            aria-label="Products per page"
-            value={perPage}
-            onChange={(e) => {
-              setPerPage(e.target.value);
-              setPage(0);
-            }}
-          >
-            {["All", "12", "24"].map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
-        </label>
-        <span>
-          {selection.length
-            ? `${current * pageSize + 1}–${Math.min((current + 1) * pageSize, selection.length)} of ${selection.length} finds`
-            : "0 finds"}
-        </span>
-        <div>
-          <button
-            disabled={pages < 2}
-            aria-label="Previous products"
-            onClick={() => setPage((current - 1 + pages) % pages)}
-          >
-            <ChevronLeft size={17} />
-          </button>
-          <button
-            disabled={pages < 2}
-            aria-label="Next products"
-            onClick={() => setPage((current + 1) % pages)}
-          >
-            <ChevronRight size={17} />
-          </button>
-        </div>
-      </div>
       <div className="collection-promos">
         <div className="find-sale">
           <span className="sale-flower" aria-hidden="true">
@@ -384,6 +442,9 @@ export default function ProductShowcase({
             <span>
               <small>EXPLORE {p.category.toUpperCase()}</small>
               <strong>{p.label}</strong>
+              {categoryStatus[p.category] === "coming_soon" && (
+                <em className="promo-coming-soon">Coming soon</em>
+              )}
             </span>
             <ArrowUpRight size={20} />
           </button>

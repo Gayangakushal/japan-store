@@ -93,6 +93,7 @@ export function buildLocalCatalogue(
 export function canAddToBag(product: StoreProduct): boolean {
   return (
     !product.catalogueOnly &&
-    (!product.ramen || (Number.isFinite(product.price) && product.price > 0))
+    product.ramen?.availability !== "out_of_stock" &&
+    Number.isFinite(product.price) && product.price > 0
   );
 }

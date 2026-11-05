@@ -8,6 +8,12 @@ export type Database = {
   };
   public: {
     Tables: {
+      categories: {
+        Row: { name: string; status: "active" | "coming_soon" };
+        Insert: { name: string; status?: "active" | "coming_soon" };
+        Update: { name?: string; status?: "active" | "coming_soon" };
+        Relationships: [];
+      };
       products: {
         Row: {
           ramen: Json | null;

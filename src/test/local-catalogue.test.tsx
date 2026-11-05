@@ -87,12 +87,12 @@ describe("Local frontend catalogue", () => {
     expect(
       canAddToBag({
         id: 123,
-        name: "Existing free sample",
+        name: "Product with price pending",
         category: "Chocolate",
         price: 0,
         image: "/products/chocolate.jpg",
       }),
-    ).toBe(true);
+    ).toBe(false);
     expect(buildLocalCatalogue([]).every((p) => p.catalogueOnly && !canAddToBag(p))).toBe(true);
   });
   it("renders all 50 catalogue cards with zero network calls and keeps local-only bag actions disabled", () => {
@@ -120,7 +120,8 @@ describe("Local frontend catalogue", () => {
       [...cards].filter((card) => (card.querySelector(".find-add") as HTMLButtonElement).disabled),
     ).toHaveLength(49);
     expect(fetch).not.toHaveBeenCalled();
-    expect(host).toHaveTextContent("Estimated Japan retail price");
+    expect(host).not.toHaveTextContent("Estimated Japan retail price");
+    expect(host.querySelector(".ramen-meta")).toBeNull();
   });
   it("preserves existing cart IDs, LKR subtotal and WhatsApp request when cached commercial data is available", () => {
     const fetch = vi.fn(() => {
@@ -153,4 +154,9 @@ describe("Local frontend catalogue", () => {
     expect(decodeURIComponent(String(open.mock.calls[0]?.[0]))).toContain("Subtotal: Rs. 3,700");
     expect(fetch).not.toHaveBeenCalled();
   });
+  it("disables ordering for a priced product marked out of stock", () => {
+    const product = buildLocalCatalogue().find((p) => p.price > 0 && p.ramen)!;
+    expect(canAddToBag({ ...product, ramen: { ...product.ramen, availability: "out_of_stock" } })).toBe(false);
+  });
+
 });

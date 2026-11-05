@@ -14,6 +14,7 @@ export function productMedia(product) {
       product.ramen?.image && ![entry.image, entry.fallback].includes(product.ramen.image);
     return {
       ...entry,
+      status: custom ? "custom" : entry.status,
       image: custom ? product.ramen.image : entry.image,
       alt: custom ? product.ramen.image_alt || product.name : entry.alt,
       credit: custom

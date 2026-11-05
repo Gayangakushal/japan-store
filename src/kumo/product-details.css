@@ -1,0 +1,356 @@
+﻿.product-view-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: #18211980;
+  backdrop-filter: blur(7px);
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-single-view {
+  width: 1120px;
+  max-width: 100%;
+  max-height: 94dvh;
+  background: #fcfbf8;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 100px #13201640;
+  color: #252d28;
+}
+.detail-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 26px;
+  border-bottom: 1px solid #e9e6df;
+  background: white;
+  flex-shrink: 0;
+}
+.detail-toolbar button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  padding: 4px;
+}
+.detail-toolbar > span {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #92968b;
+}
+.detail-scroll {
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.detail-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding: 38px;
+}
+.detail-photo {
+  min-width: 0;
+  position: relative;
+  align-self: start;
+  background: #fff;
+  border: 1px solid #e8e6de;
+  border-radius: 19px;
+  padding: 35px 22px 18px;
+}
+.detail-photo > img {
+  width: 100%;
+  height: 360px;
+  object-fit: contain;
+  padding: 12px;
+}
+.detail-category {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  border-radius: 20px;
+  background: #f1f4e8;
+  padding: 6px 12px;
+  font-size: 10px;
+  color: #617340;
+}
+.detail-photo .image-credit {
+  padding: 0 8px;
+  font-size: 10px;
+  margin: 12px 0 0;
+}
+.detail-summary {
+  padding-top: 8px;
+  min-width: 0;
+}
+.detail-summary .eyebrow,
+.detail-related .eyebrow {
+  color: #b9332e;
+  font-size: 9px;
+  letter-spacing: 1.7px;
+  margin: 0 0 13px;
+}
+.detail-summary h2 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  line-height: 1.25;
+  margin: 0 0 15px;
+}
+.detail-description {
+  font-size: 13px;
+  color: #7a8078;
+  line-height: 1.8;
+}
+.detail-price {
+  display: flex;
+  gap: 13px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-size: 27px;
+  font-weight: 700;
+  margin: 20px 0 7px;
+}
+.detail-price del {
+  color: #999e97;
+  font-size: 16px;
+  font-weight: 400;
+}
+.detail-stock {
+  font-size: 11px;
+  color: #688a39;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+}
+.detail-facts {
+  border-top: 1px solid #e3e6dc;
+  padding-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.detail-facts dt {
+  color: #92978c;
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+.detail-facts dd {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+.detail-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #b9332e;
+  color: white;
+  border-radius: 9px;
+  width: 100%;
+  padding: 16px;
+  font-size: 13px;
+  margin: 20px 0;
+}
+.detail-add:disabled {
+  background: #e7e8e0;
+  color: #7a8073;
+  cursor: not-allowed;
+}
+.detail-reassurance {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  color: #6c7566;
+}
+.detail-reassurance span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.detail-order-note {
+  font-size: 10px;
+  color: #8d9288;
+  line-height: 1.7;
+  margin: 17px 0 0;
+}
+.detail-related {
+  padding: 30px 38px 38px;
+  border-top: 1px solid #e7e6de;
+}
+.detail-related-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.detail-related-heading h3 {
+  font-size: 25px;
+  margin: 0;
+  letter-spacing: -0.7px;
+}
+.detail-related-heading > span {
+  font-size: 11px;
+  color: #96998e;
+}
+.detail-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.detail-related-card {
+  text-align: left;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.detail-related-card > div {
+  position: relative;
+  background: white;
+  border: 1px solid #e8e7df;
+  border-radius: 14px;
+  width: 100%;
+  margin-bottom: 13px;
+  overflow: hidden;
+}
+.detail-related-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  padding: 17px;
+  transition: transform 0.2s;
+}
+.detail-related-card:hover img {
+  transform: scale(1.04);
+}
+.detail-related-card > div > span {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50%;
+  padding: 6px;
+  background: #f1f3e8;
+  color: #6c7e47;
+}
+.detail-related-card small {
+  font-size: 9px;
+  color: #8a9082;
+  margin-bottom: 5px;
+}
+.detail-related-card strong {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.detail-related-card b {
+  font-size: 12px;
+  margin-top: auto;
+}
+@media (max-width: 700px) {
+  .product-view-backdrop {
+    padding: 0;
+  }
+  .product-single-view {
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .detail-toolbar {
+    padding: 15px 18px;
+  }
+  .detail-toolbar > span {
+    display: none;
+  }
+  .detail-hero {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 22px;
+  }
+  .detail-photo > img {
+    height: 260px;
+  }
+  .detail-summary h2 {
+    font-size: 27px;
+  }
+  .detail-related {
+    padding: 26px 22px;
+  }
+  .detail-related-heading > span {
+    display: none;
+  }
+  .detail-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 13px;
+  }
+  .detail-related-card img {
+    height: 155px;
+  }
+}
+.category-coming-soon {
+  margin: 30px 0 45px;
+  min-height: 370px;
+  border: 1px solid #e7e0d5;
+  border-radius: 22px;
+  background: radial-gradient(ellipse at top, #f5e7dd, transparent 65%), #f6f3ec;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 22px;
+}
+.coming-soon-symbol {
+  font-size: 50px;
+  color: #b9332e;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+.coming-soon-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #a57f6b;
+}
+.category-coming-soon h2 {
+  font-size: 32px;
+  margin: 15px 0;
+}
+.category-coming-soon p {
+  max-width: 460px;
+  font-size: 12px;
+  color: #8a8178;
+}
+.coming-soon-pill {
+  border: 1px solid #dfcbbb;
+  color: #a06c50;
+  border-radius: 30px;
+  padding: 7px 17px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  margin: 8px 0 20px;
+}
+.category-coming-soon > button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #b9332e;
+  font-size: 12px;
+}
+.promo-coming-soon {
+  display: inline-block;
+  background: #ffffffea;
+  color: #6d5847;
+  border-radius: 20px;
+  font-style: normal;
+  font-size: 9px;
+  padding: 6px 10px;
+  margin-top: 12px;
+}

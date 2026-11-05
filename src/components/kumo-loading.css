@@ -1,0 +1,21 @@
+﻿.kumo-loading{position:relative;isolation:isolate;display:grid;place-items:center;min-height:100svh;width:100%;padding:64px 24px 90px;overflow:hidden;background:#faf8f3;color:#263343;font-family:'DM Sans',Arial,sans-serif;box-sizing:border-box}
+.kumo-loading:before,.kumo-loading:after{content:'';position:absolute;z-index:-1;width:340px;height:340px;border:1px solid #eee7dc;border-radius:50%;pointer-events:none}
+.kumo-loading:before{top:-225px;right:-100px}
+.kumo-loading:after{bottom:-240px;left:-90px;width:400px;height:400px}
+.kumo-loading-content{display:flex;flex-direction:column;align-items:center;text-align:center}
+.kumo-loading-emblem{position:relative;display:grid;place-items:center;height:122px;width:122px;margin-bottom:22px}
+.kumo-loading-orbit{position:absolute;inset:0;border:1px solid #e8ded0;border-radius:50%}
+.kumo-loading-stamp{display:grid;place-items:center;width:66px;height:66px;border-radius:17px;background:#b9332e;color:#fff;font-family:serif;font-size:41px;line-height:1;box-shadow:0 8px 24px #b9332e14;transform:rotate(-9deg);animation:kumo-stamp-float 2.8s ease-in-out infinite}
+.kumo-loading-spark{position:absolute;right:2px;top:24px;width:7px;height:7px;background:#c09a77;border:4px solid #faf8f3;box-sizing:content-box;border-radius:50%;animation:kumo-spark-pulse 2.8s ease-in-out infinite}
+.kumo-loading-wordmark{font-family:Manrope,'DM Sans',Arial,sans-serif;font-size:54px;font-weight:800;letter-spacing:-3.5px;line-height:1.1;color:#263343}
+.kumo-loading-wordmark>span{color:#b9332e}
+.kumo-loading-tagline{font-size:8px;letter-spacing:2.1px;color:#9c8e7e;font-weight:500;margin-top:12px}
+.kumo-loading-track{display:block;position:relative;width:142px;height:3px;background:#eae4da;border-radius:3px;overflow:hidden;margin:35px 0 18px}
+.kumo-loading-track>span{position:absolute;top:0;bottom:0;left:0;width:40%;border-radius:inherit;background:#b9332e;animation:kumo-loading-sweep 1.7s cubic-bezier(.65,0,.35,1) infinite}
+.kumo-loading-label{font-size:11px;font-weight:400;line-height:1.7;letter-spacing:.1px;color:#8d928e}
+.kumo-loading-footnote{position:absolute;bottom:32px;left:24px;right:24px;text-align:center;font-size:7px;letter-spacing:2.2px;color:#b0a89b}
+@keyframes kumo-stamp-float{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-5px) rotate(-5deg)}}
+@keyframes kumo-spark-pulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes kumo-loading-sweep{0%{transform:translateX(-110%)}100%{transform:translateX(360%)}}
+@media(max-width:600px){.kumo-loading-emblem{height:108px;width:108px;margin-bottom:20px}.kumo-loading-stamp{width:60px;height:60px;font-size:37px;border-radius:15px}.kumo-loading-wordmark{font-size:48px}.kumo-loading-tagline{font-size:7px;letter-spacing:1.9px}.kumo-loading-footnote{bottom:25px}}
+@media(prefers-reduced-motion:reduce){.kumo-loading-stamp,.kumo-loading-spark,.kumo-loading-track>span{animation:none}.kumo-loading-track>span{left:30%}}
