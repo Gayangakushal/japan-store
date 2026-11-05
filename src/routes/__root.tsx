@@ -140,6 +140,7 @@ function RootComponent() {
       // Store queries can show a recoverable connection error; an optional auth
       // listener must not replace the entire storefront with the root error page.
       console.error('Unable to initialise the account session:', error);
+      return;
     }
   }, [queryClient, router, pathname]);
 
