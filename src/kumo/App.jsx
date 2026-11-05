@@ -23,7 +23,6 @@ import {
   ShieldCheck,
   MessageCircle,
   Heart,
-  Settings,
   Trash2,
   Check,
   SlidersHorizontal,
@@ -400,13 +399,6 @@ export default function App({ previewStore = null, categoryStatus = defaultCateg
               }
             >
               Returns & support
-            </button>
-            <button
-              onClick={() => {
-                navigate({ to: "/admin" });
-              }}
-            >
-              Admin <Settings size={12} />
             </button>
           </div>
           <div className="footer-message">
